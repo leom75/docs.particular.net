@@ -28,7 +28,11 @@ public class DebugFlagMutator :
 
     public Task MutateOutgoing(MutateOutgoingTransportMessageContext context)
     {
-        context.OutgoingHeaders["Debug"] = Debug.ToString();
+        if (!context.OutgoingHeaders.ContainsKey("Debug"))
+        {
+            // prevent debug set by SendOptions from within web project is overwritten
+            context.OutgoingHeaders["Debug"] = Debug.ToString();
+        }
         return Task.CompletedTask;
     }
 }
